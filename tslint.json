@@ -18,7 +18,7 @@
         "prefer-const": false,
         "quotemark": [true, "single"],
         "radix": false,
-        "trailing-comma": false,
+        "trailing-comma": true,
         "typedef": [true, "call-signature", "parameter", "property-declaration"]
     },
     "rulesDirectory": []

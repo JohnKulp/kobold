@@ -4,47 +4,47 @@ import { RateLimiter } from 'discord.js-rate-limiter';
 import { EventData } from '../models/internal-models';
 import { Trigger } from '../triggers';
 
-let Config = require('../../config/config.json');
+import { Config } from '~/configurer';
 
 export class TriggerHandler {
-    private rateLimiter = new RateLimiter(
-        Config.rateLimiting.triggers.amount,
-        Config.rateLimiting.triggers.interval * 1000
-    );
+	private rateLimiter = new RateLimiter(
+		Config.rateLimiting.triggers.amount,
+		Config.rateLimiting.triggers.interval * 1000,
+	);
 
-    constructor(private triggers: Trigger[]) {}
+	constructor(private triggers: Trigger[]) {}
 
-    public async process(msg: Message): Promise<void> {
-        // Find triggers caused by this message
-        let triggers = this.triggers.filter(trigger => {
-            if (trigger.requireGuild && !msg.guild) {
-                return false;
-            }
+	public async process(msg: Message): Promise<void> {
+		// Find triggers caused by this message
+		let triggers = this.triggers.filter((trigger) => {
+			if (trigger.requireGuild && !msg.guild) {
+				return false;
+			}
 
-            if (!trigger.triggered(msg)) {
-                return false;
-            }
+			if (!trigger.triggered(msg)) {
+				return false;
+			}
 
-            return true;
-        });
+			return true;
+		});
 
-        // If this message causes no triggers then return
-        if (triggers.length === 0) {
-            return;
-        }
+		// If this message causes no triggers then return
+		if (triggers.length === 0) {
+			return;
+		}
 
-        // Check if user is rate limited
-        let limited = this.rateLimiter.take(msg.author.id);
-        if (limited) {
-            return;
-        }
+		// Check if user is rate limited
+		let limited = this.rateLimiter.take(msg.author.id);
+		if (limited) {
+			return;
+		}
 
-        // TODO: Get data from database
-        let data = new EventData();
+		// TODO: Get data from database
+		let data = new EventData();
 
-        // Execute triggers
-        for (let trigger of triggers) {
-            await trigger.execute(msg, data);
-        }
-    }
+		// Execute triggers
+		for (let trigger of triggers) {
+			await trigger.execute(msg, data);
+		}
+	}
 }
