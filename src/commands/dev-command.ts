@@ -8,8 +8,6 @@ import { Lang } from '../services';
 import { MessageUtils, ShardUtils } from '../utils';
 import { Command } from './command';
 
-let TsConfig = require('../../tsconfig.json');
-
 export class DevCommand implements Command {
     public data: ApplicationCommandData = {
         name: Lang.getCom('commands.dev'),
@@ -47,7 +45,7 @@ export class DevCommand implements Command {
             Lang.getEmbed('displayEmbeds.dev', data.lang(), {
                 NODE_VERSION: process.version,
                 TS_VERSION: `v${typescript.version}`,
-                ES_VERSION: TsConfig.compilerOptions.target,
+                ES_VERSION: "es2020",
                 DJS_VERSION: `v${djs.version}`,
                 SHARD_COUNT: shardCount.toLocaleString(),
                 SERVER_COUNT: serverCount.toLocaleString(),

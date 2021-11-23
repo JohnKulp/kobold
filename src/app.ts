@@ -1,3 +1,4 @@
+import 'module-alias/register';
 import { ShardingManager, ShardingManagerMode } from 'discord.js';
 import 'reflect-metadata';
 
