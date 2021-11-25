@@ -16,7 +16,7 @@ export class TriggerHandler {
 
 	public async process(msg: Message): Promise<void> {
 		// Find triggers caused by this message
-		let triggers = this.triggers.filter((trigger) => {
+		const triggers = this.triggers.filter((trigger) => {
 			if (trigger.requireGuild && !msg.guild) {
 				return false;
 			}
@@ -34,16 +34,18 @@ export class TriggerHandler {
 		}
 
 		// Check if user is rate limited
-		let limited = this.rateLimiter.take(msg.author.id);
+		const limited = this.rateLimiter.take(msg.author.id);
 		if (limited) {
 			return;
 		}
 
 		// TODO: Get data from database
-		let data = new EventData();
+		const data = new EventData();
 
 		// Execute triggers
-		for (let trigger of triggers) {
+		for (const trigger of triggers) {
+			// triggers are handled sequentially, not simultaneously
+			// eslint-disable-next-line no-await-in-loop
 			await trigger.execute(msg, data);
 		}
 	}

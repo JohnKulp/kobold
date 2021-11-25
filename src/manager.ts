@@ -3,7 +3,8 @@ import { Shard, ShardingManager } from 'discord.js';
 import { JobService, Logger } from './services';
 
 import { Config, Debug } from '~/configurer';
-let Logs = require('../lang/logs.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Logs = require('../lang/logs.json');
 
 export class Manager {
 	constructor(private shardManager: ShardingManager, private jobService: JobService) {}
@@ -11,7 +12,7 @@ export class Manager {
 	public async start(): Promise<void> {
 		this.registerListeners();
 
-		let shardList = this.shardManager.shardList as number[];
+		const shardList = this.shardManager.shardList as number[];
 
 		try {
 			Logger.info(

@@ -6,40 +6,40 @@ import { DiscordAPIError, Message, MessageReaction, PartialMessage } from 'disco
 const IGNORED_ERROR_CODES = [10003, 10008, 50001];
 
 export class PartialUtils {
-    public static async fillMessage(msg: Message | PartialMessage): Promise<Message> {
-        if (msg.partial) {
-            try {
-                return await msg.fetch();
-            } catch (error) {
-                if (error instanceof DiscordAPIError && IGNORED_ERROR_CODES.includes(error.code)) {
-                    return;
-                } else {
-                    throw error;
-                }
-            }
-        }
+	public static async fillMessage(msg: Message | PartialMessage): Promise<Message> {
+		if (msg.partial) {
+			try {
+				return await msg.fetch();
+			} catch (error) {
+				if (error instanceof DiscordAPIError && IGNORED_ERROR_CODES.includes(error.code)) {
+					// eslint-disable-next-line consistent-return
+					return;
+				}
+				throw error;
+			}
+		}
 
-        return msg as Message;
-    }
+		return msg as Message;
+	}
 
-    public static async fillReaction(msgReaction: MessageReaction): Promise<MessageReaction> {
-        if (msgReaction.partial) {
-            try {
-                msgReaction = await msgReaction.fetch();
-            } catch (error) {
-                if (error instanceof DiscordAPIError && IGNORED_ERROR_CODES.includes(error.code)) {
-                    return;
-                } else {
-                    throw error;
-                }
-            }
-        }
+	public static async fillReaction(msgReaction: MessageReaction): Promise<MessageReaction> {
+		let fetchedMessageReaction = msgReaction;
+		if (msgReaction.partial) {
+			try {
+				fetchedMessageReaction = await msgReaction.fetch();
+			} catch (error) {
+				if (error instanceof DiscordAPIError && IGNORED_ERROR_CODES.includes(error.code)) {
+					return null;
+				}
+				throw error;
+			}
+		}
 
-        msgReaction.message = await this.fillMessage(msgReaction.message);
-        if (!msgReaction.message) {
-            return;
-        }
+		fetchedMessageReaction.message = await this.fillMessage(fetchedMessageReaction.message);
+		if (!fetchedMessageReaction.message) {
+			return null;
+		}
 
-        return msgReaction;
-    }
+		return fetchedMessageReaction;
+	}
 }

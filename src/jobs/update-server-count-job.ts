@@ -7,11 +7,14 @@ import { ShardUtils } from '../utils';
 import { Job } from './job';
 
 import { Config, BotSites } from '~/configurer';
-let Logs = require('../../lang/logs.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Logs = require('../../lang/logs.json');
 
 export class UpdateServerCountJob implements Job {
 	public name = 'Update Server Count';
+
 	public schedule: string = Config.jobs.updateServerCount.schedule;
+
 	public log: boolean = Config.jobs.updateServerCount.log;
 
 	private botSites: BotSite[];
@@ -21,15 +24,15 @@ export class UpdateServerCountJob implements Job {
 	}
 
 	public async run(): Promise<void> {
-		let serverCount = await ShardUtils.serverCount(this.shardManager);
+		const serverCount = await ShardUtils.serverCount(this.shardManager);
 
-		let type: ActivityType = 'STREAMING';
-		let name = `to ${serverCount.toLocaleString()} servers`;
-		let url = Lang.getCom('links.stream');
+		const type: ActivityType = 'STREAMING';
+		const name = `to ${serverCount.toLocaleString()} servers`;
+		const url = Lang.getCom('links.stream');
 
 		await this.shardManager.broadcastEval(
 			(client, context) => {
-				let customClient = client as CustomClient;
+				const customClient = client as CustomClient;
 				return customClient.setPresence(context.type, context.name, context.url);
 			},
 			{ context: { type, name, url } },
@@ -39,10 +42,12 @@ export class UpdateServerCountJob implements Job {
 			Logs.info.updatedServerCount.replaceAll('{SERVER_COUNT}', serverCount.toLocaleString()),
 		);
 
-		for (let botSite of this.botSites) {
+		const botSitePromises = this.botSites.map(async (botSite) => {
 			try {
-				let body = JSON.parse(botSite.body.replaceAll('{{SERVER_COUNT}}', serverCount.toString()));
-				let res = await this.httpService.post(botSite.url, botSite.authorization, body);
+				const body = JSON.parse(
+					botSite.body.replaceAll('{{SERVER_COUNT}}', serverCount.toString()),
+				);
+				const res = await this.httpService.post(botSite.url, botSite.authorization, body);
 
 				if (!res.ok) {
 					throw res;
@@ -52,10 +57,10 @@ export class UpdateServerCountJob implements Job {
 					Logs.error.updatedServerCountSite.replaceAll('{BOT_SITE}', botSite.name),
 					error,
 				);
-				continue;
 			}
 
 			Logger.info(Logs.info.updatedServerCountSite.replaceAll('{BOT_SITE}', botSite.name));
-		}
+		});
+		await Promise.all([botSitePromises]);
 	}
 }

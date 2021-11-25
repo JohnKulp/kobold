@@ -20,7 +20,7 @@ let logger = pino(
 					ignore: 'pid,hostname',
 					translateTime: 'yyyy-mm-dd HH:MM:ss.l',
 				},
-		})
+		  })
 		: undefined,
 );
 
@@ -45,7 +45,7 @@ export class Logger {
 		// Otherwise log details about the error
 		switch (error.constructor) {
 			case Response: {
-				let res = error as Response;
+				const res = error as Response;
 				let resText: string;
 				try {
 					resText = await res.text();
@@ -64,7 +64,7 @@ export class Logger {
 				break;
 			}
 			case DiscordAPIError: {
-				let discordError = error as DiscordAPIError;
+				const discordError = error as DiscordAPIError;
 				logger
 					.child({
 						message: discordError.message,

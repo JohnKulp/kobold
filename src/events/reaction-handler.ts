@@ -1,7 +1,7 @@
 import { MessageReaction, User } from 'discord.js';
 import { RateLimiter } from 'discord.js-rate-limiter';
 
-import { EventHandler } from '.';
+import { EventHandler } from './event-handler';
 import { EventData } from '../models/internal-models';
 import { Reaction } from '../reactions';
 
@@ -16,7 +16,7 @@ export class ReactionHandler implements EventHandler {
 	constructor(private reactions: Reaction[]) {}
 
 	public async process(msgReaction: MessageReaction, reactor: User): Promise<void> {
-		let msg = msgReaction.message;
+		const msg = msgReaction.message;
 
 		// Don't respond to self, or other bots
 		if (reactor.id === msgReaction.client.user.id || reactor.bot) {
@@ -24,7 +24,7 @@ export class ReactionHandler implements EventHandler {
 		}
 
 		// Try to find the reaction the user wants
-		let reaction = this.findReaction(msgReaction.emoji.name);
+		const reaction = this.findReaction(msgReaction.emoji.name);
 		if (!reaction) {
 			return;
 		}
@@ -34,13 +34,13 @@ export class ReactionHandler implements EventHandler {
 		}
 
 		// Check if user is rate limited
-		let limited = this.rateLimiter.take(msg.author.id);
+		const limited = this.rateLimiter.take(msg.author.id);
 		if (limited) {
 			return;
 		}
 
 		// TODO: Get data from database
-		let data = new EventData();
+		const data = new EventData();
 
 		// Execute the reaction
 		await reaction.execute(msgReaction, reactor, data);

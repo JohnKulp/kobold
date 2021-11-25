@@ -2,9 +2,9 @@ import { ApplicationCommandData, CommandInteraction, PermissionResolvable } from
 import { EventData } from '../models/internal-models';
 
 export interface Command {
-    data: ApplicationCommandData;
-    requireDev: boolean;
-    requireGuild: boolean;
-    requirePerms: PermissionResolvable[];
-    execute(intr: CommandInteraction, data: EventData): Promise<void>;
+	data: ApplicationCommandData;
+	requireDev: boolean;
+	requireGuild: boolean;
+	requirePerms: PermissionResolvable[];
+	execute(intr: CommandInteraction, data: EventData): Promise<void>;
 }

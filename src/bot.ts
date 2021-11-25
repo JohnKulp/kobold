@@ -21,7 +21,8 @@ import { JobService, Logger } from './services';
 import { PartialUtils } from './utils';
 import { Config, Debug } from '~/configurer';
 
-let Logs = require('../lang/logs.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Logs = require('../lang/logs.json');
 
 export class Bot {
 	private ready = false;
@@ -44,7 +45,7 @@ export class Bot {
 
 	private registerListeners(): void {
 		this.client.on(Constants.Events.CLIENT_READY, () => this.onReady());
-		this.client.on(Constants.Events.SHARD_READY, (shardId: number) => this.onShardReady(shardId));
+		this.client.on(Constants.Events.SHARD_READY, (shardId: number) => Bot.onShardReady(shardId));
 		this.client.on(Constants.Events.GUILD_CREATE, (guild: Guild) => this.onGuildJoin(guild));
 		this.client.on(Constants.Events.GUILD_DELETE, (guild: Guild) => this.onGuildLeave(guild));
 		this.client.on(Constants.Events.MESSAGE_CREATE, (msg: Message) => this.onMessage(msg));
@@ -56,7 +57,7 @@ export class Bot {
 			(messageReaction: MessageReaction, user: User) => this.onReaction(messageReaction, user),
 		);
 		this.client.on(Constants.Events.RATE_LIMIT, (rateLimitData: RateLimitData) =>
-			this.onRateLimit(rateLimitData),
+			Bot.onRateLimit(rateLimitData),
 		);
 	}
 
@@ -65,12 +66,11 @@ export class Bot {
 			await this.client.login(token);
 		} catch (error) {
 			Logger.error(Logs.error.clientLogin, error);
-			return;
 		}
 	}
 
 	private async onReady(): Promise<void> {
-		let userTag = this.client.user.tag;
+		const userTag = this.client.user.tag;
 		Logger.info(Logs.info.clientLogin.replaceAll('{USER_TAG}', userTag));
 
 		if (!Debug.dummyMode.enabled) {
@@ -81,7 +81,7 @@ export class Bot {
 		Logger.info(Logs.info.clientReady);
 	}
 
-	private onShardReady(shardId: number): void {
+	private static onShardReady(shardId: number): void {
 		Logger.setShardId(shardId);
 	}
 
@@ -117,13 +117,13 @@ export class Bot {
 			return;
 		}
 
-		msg = await PartialUtils.fillMessage(msg);
-		if (!msg) {
+		const filledMsg = await PartialUtils.fillMessage(msg);
+		if (!filledMsg) {
 			return;
 		}
 
 		try {
-			await this.messageHandler.process(msg);
+			await this.messageHandler.process(filledMsg);
 		} catch (error) {
 			Logger.error(Logs.error.message, error);
 		}
@@ -153,19 +153,19 @@ export class Bot {
 			return;
 		}
 
-		msgReaction = await PartialUtils.fillReaction(msgReaction);
-		if (!msgReaction) {
+		const filledMsgReaction = await PartialUtils.fillReaction(msgReaction);
+		if (!filledMsgReaction) {
 			return;
 		}
 
 		try {
-			await this.reactionHandler.process(msgReaction, reactor);
+			await this.reactionHandler.process(filledMsgReaction, reactor);
 		} catch (error) {
 			Logger.error(Logs.error.reaction, error);
 		}
 	}
 
-	private async onRateLimit(rateLimitData: RateLimitData): Promise<void> {
+	private static async onRateLimit(rateLimitData: RateLimitData): Promise<void> {
 		if (rateLimitData.timeout >= Config.logging.rateLimit.minTimeout * 1000) {
 			Logger.error(Logs.error.apiRateLimit, rateLimitData);
 		}

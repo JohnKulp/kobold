@@ -8,14 +8,15 @@ import {
 } from 'discord.js';
 import { RateLimiter } from 'discord.js-rate-limiter';
 
-import { EventHandler } from '.';
+import { EventHandler } from './event-handler';
 import { Command } from '../commands';
 import { EventData } from '../models/internal-models';
 import { Lang, Logger } from '../services';
 import { MessageUtils, PermissionUtils } from '../utils';
 
 import { Config, Debug } from '~/configurer';
-let Logs = require('../../lang/logs.json');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const Logs = require('../../lang/logs.json');
 
 export class CommandHandler implements EventHandler {
 	private rateLimiter = new RateLimiter(
@@ -27,7 +28,7 @@ export class CommandHandler implements EventHandler {
 
 	public async process(intr: CommandInteraction): Promise<void> {
 		// Check if user is rate limited
-		let limited = this.rateLimiter.take(intr.user.id);
+		const limited = this.rateLimiter.take(intr.user.id);
 		if (limited) {
 			return;
 		}
@@ -37,13 +38,13 @@ export class CommandHandler implements EventHandler {
 		await intr.deferReply();
 
 		// TODO: Get data from database
-		let data = new EventData();
+		const data = new EventData();
 
 		// Check if I have permission to send a message
 		if (!PermissionUtils.canSendEmbed(intr.channel)) {
 			// No permission to send message
 			if (PermissionUtils.canSend(intr.channel)) {
-				let message = Lang.getRef('messages.missingEmbedPerms', data.lang());
+				const message = Lang.getRef('messages.missingEmbedPerms', data.lang());
 				await MessageUtils.sendIntr(intr, message);
 			}
 
@@ -52,7 +53,9 @@ export class CommandHandler implements EventHandler {
 		}
 
 		// Try to find the command the user wants
-		let command = this.commands.find((command) => command.data.name === intr.commandName);
+		const command = this.commands.find(
+			(foundCommand) => foundCommand.data.name === intr.commandName,
+		);
 		if (!command) {
 			await this.sendError(intr, data);
 			Logger.error(

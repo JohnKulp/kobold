@@ -7,19 +7,22 @@ import { MessageUtils } from '../utils';
 import { Command } from './command';
 
 export class TranslateCommand implements Command {
-    public data: ApplicationCommandData = {
-        name: Lang.getCom('commands.translate'),
-        description: Lang.getRef('commandDescs.test', Lang.Default),
-    };
-    public requireDev = false;
-    public requireGuild = false;
-    public requirePerms = [];
+	public data: ApplicationCommandData = {
+		name: Lang.getCom('commands.translate'),
+		description: Lang.getRef('commandDescs.test', Lang.Default),
+	};
 
-    public async execute(intr: CommandInteraction, data: EventData): Promise<void> {
-        let embed = Lang.getEmbed('displayEmbeds.translate', data.lang());
-        for (let langCode of Object.values(LangCode)) {
-            embed.addField(Language.displayName(langCode), Language.translators(langCode));
-        }
-        await MessageUtils.sendIntr(intr, embed);
-    }
+	public requireDev = false;
+
+	public requireGuild = false;
+
+	public requirePerms = [];
+
+	public async execute(intr: CommandInteraction, data: EventData): Promise<void> {
+		const embed = Lang.getEmbed('displayEmbeds.translate', data.lang());
+		for (const langCode of Object.values(LangCode)) {
+			embed.addField(Language.displayName(langCode), Language.translators(langCode));
+		}
+		await MessageUtils.sendIntr(intr, embed);
+	}
 }
