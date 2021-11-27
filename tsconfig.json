@@ -6,7 +6,7 @@
 		"declaration": true,
 		"sourceMap": true,
 		"outDir": "./dist",
-		"rootDir": "./src",
+		"rootDir": "./",
 		"baseUrl": "./src",
 		"strict": false,
 		"allowSyntheticDefaultImports": true,
@@ -22,5 +22,5 @@
 			"~/*": ["./*"] // This mapping is relative to "baseUrl"
 		}
 	},
-	"exclude": ["dist", "node_modules", "tests", "**/test/**/*"]
+	"exclude": ["dist", "node_modules"]
 }

@@ -6,9 +6,7 @@ import { Controller } from '~/controllers';
 import { checkAuth, handleError } from '~/middleware';
 import { Logger } from '~/services';
 import { Config } from '~/configurer';
-// special import to keep the logs out of the src
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Logs = require('../lang/logs.json');
+import Logs from '../lang/logs.json';
 
 export class Api {
 	private app: Express;

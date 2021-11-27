@@ -9,7 +9,8 @@
         "info": "info",
         "link": "link",
         "test": "test",
-        "translate": "translate"
+        "translate": "translate",
+        "authorize": "authorize"
     },
     "arguments": {
         "link": "link"
@@ -24,9 +25,9 @@
         "docs": "https://top.gg/",
         "vote": "https://top.gg/",
         "support": "https://support.discord.com/",
-        "stream": "https://www.twitch.tv/novakevin",
-        "author": "https://github.com/",
-        "source": "https://github.com/",
+        "stream": "",
+        "author": "https://github.com/SignificantOtter",
+        "source": "https://github.com/SignificantOtter/kobold",
         "template": "https://github.com/KevinNovak/Discord-Bot-TypeScript-Template"
     }
 }

@@ -13,6 +13,8 @@ Config.api.secret = process.env.API_SECRET;
 
 Config.clustering.masterApi.token = process.env.CLUSTERING_MASTER_API_TOKEN;
 
+Config.database.url = process.env.DATABASE_URL;
+
 const typedBotSites = BotSites as BotSite[];
 
 export { Config, typedBotSites as BotSites, Debug };

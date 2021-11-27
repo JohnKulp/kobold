@@ -178,7 +178,8 @@
             "info": "View bot info.",
             "link": "Get links to invite, support, etc.",
             "test": "Run the test command.",
-            "translate": "View translation info."
+            "translate": "View translation info.",
+            "authorize": "Authorize kobold to read a wanderer's guide character sheet."
         },
         "lists": {
             "languageItem": "**{{LANGUAGE_NAME}}** (`{{LANGUAGE_KEYWORD}}`)"

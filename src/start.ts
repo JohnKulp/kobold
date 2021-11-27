@@ -22,7 +22,7 @@ import {
 	TriggerHandler,
 } from './events';
 import { CustomClient } from './extensions';
-import { JobService, Logger } from './services';
+import { DBModel, JobService, Logger } from './services';
 import { Config } from '~/configurer';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Logs = require('../lang/logs.json');
@@ -55,6 +55,8 @@ process.on('unhandledRejection', (reason) => {
 });
 
 async function start(): Promise<void> {
+	DBModel.init(Config.database.url);
+
 	const client = new CustomClient({
 		// any binds for json config imports. TODO make a more robust type for the config
 		intents: Config.client.intents as any,
