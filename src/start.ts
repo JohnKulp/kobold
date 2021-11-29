@@ -1,8 +1,10 @@
 import 'module-alias/register';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/rest/v9';
-import { Options } from 'discord.js';
+import { IntentsString, Options, PartialTypes } from 'discord.js';
 
+import { Api } from './api';
+import { RootController, CharacterTokenResponseController } from './controllers';
 import { Bot } from './bot';
 import {
 	Command,
@@ -59,8 +61,8 @@ async function start(): Promise<void> {
 
 	const client = new CustomClient({
 		// any binds for json config imports. TODO make a more robust type for the config
-		intents: Config.client.intents as any,
-		partials: Config.client.partials as any,
+		intents: Config.client.intents as IntentsString[],
+		partials: Config.client.partials as PartialTypes[],
 		makeCache: Options.cacheWithLimits({
 			// Keep default caching behavior
 			...Options.defaultMakeCacheSettings,
@@ -103,6 +105,12 @@ async function start(): Promise<void> {
 		process.exit();
 	}
 
+	// API
+	const rootController = new RootController();
+	const characterTokenResponseController = new CharacterTokenResponseController();
+	const api = new Api([rootController, characterTokenResponseController]);
+
+	await api.start();
 	await bot.start();
 }
 

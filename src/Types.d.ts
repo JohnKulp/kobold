@@ -44,9 +44,7 @@ export declare namespace SchemaTypes {
 		/**
 		 * when the token expires
 		 */
-		expiresAt?: {
-			[k: string]: any;
-		};
+		expiresAt?: string;
 		/**
 		 * the rights granted for the character
 		 */
@@ -96,9 +94,7 @@ export declare namespace SchemaTypes {
 		/**
 		 * when the token request expires
 		 */
-		expiresAt?: {
-			[k: string]: any;
-		};
+		expiresAt?: string;
 		[k: string]: any;
 	}
 	

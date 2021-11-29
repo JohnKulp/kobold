@@ -24,7 +24,8 @@ export const WgToken: JSONSchema7 = {
 			description: "the wanderer's guide oauth access token",
 		},
 		expiresAt: {
-			type: 'date-time',
+			type: 'string',
+			format: 'date-time',
 			description: 'when the token expires',
 		},
 		accessRights: {

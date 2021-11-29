@@ -21,7 +21,7 @@ export class Api {
 	public async start(): Promise<void> {
 		const listen = util.promisify(this.app.listen.bind(this.app));
 		await listen(Config.api.port);
-		Logger.info(Logs.info.apiStarted.replaceAll('{PORT}', Config.api.port));
+		Logger.info(Logs.info.apiStarted.replaceAll('{PORT}', Config.api.port.toString()));
 	}
 
 	private setupControllers(): void {

@@ -1,4 +1,10 @@
-export const auditSchema = {
+import { JSONSchema7Definition } from 'json-schema';
+
+interface jsonSchema7Properties {
+	[k: string]: JSONSchema7Definition;
+}
+
+export const auditSchema: jsonSchema7Properties = {
 	createdAt: {
 		type: 'string',
 		format: 'date-time',

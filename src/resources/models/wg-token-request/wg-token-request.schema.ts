@@ -27,7 +27,8 @@ export const WgTokenRequest: JSONSchema7 = {
 			description: 'unique hash to check the confirmation against to help combat CSRF',
 		},
 		expiresAt: {
-			type: 'date-time',
+			type: 'string',
+			format: 'date-time',
 			description: 'when the token request expires',
 		},
 	},

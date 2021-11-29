@@ -3,7 +3,12 @@ import { ShardingManager, ShardingManagerMode } from 'discord.js';
 import 'reflect-metadata';
 
 import { Api } from './api';
-import { GuildsController, RootController, ShardsController } from './controllers';
+import {
+	GuildsController,
+	RootController,
+	ShardsController,
+	CharacterTokenResponseController,
+} from './controllers';
 import { UpdateServerCountJob } from './jobs';
 import { Manager } from './manager';
 import { HttpService, JobService, Logger, MasterApiService, DBModel } from './services';
@@ -73,7 +78,13 @@ async function start(): Promise<void> {
 	const guildsController = new GuildsController(shardManager);
 	const shardsController = new ShardsController(shardManager);
 	const rootController = new RootController();
-	const api = new Api([guildsController, shardsController, rootController]);
+	const characterTokenResponseController = new CharacterTokenResponseController();
+	const api = new Api([
+		guildsController,
+		shardsController,
+		rootController,
+		characterTokenResponseController,
+	]);
 
 	// Start
 	await manager.start();
